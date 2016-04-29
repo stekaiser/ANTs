@@ -47,7 +47,7 @@ my @qstatLines = split("\n", $qstatOutput);
 # my @header = split('\s+', trim($qstatLines[0]));
 
 # Position in qstat output of tokens we want
-# Here we hardcode the values that work at UVa
+# Here we hardcode the values that work at UVa (alebac: also at DCCN; stekai: also at DCC)
 my $jobID_Pos = 0;
 my $statePos = 9;
 
@@ -95,27 +95,24 @@ while( $jobsIncomplete )
 
       # The qstat command only prints the first 15 characters of the job
       # so we only compare the first 15 characters
+	  # alebac: for DCCN its 22 chars
+      # stekai: for DCC its 16 chars
 
-      my $job_short = substr( $job, 0, 15 );
+      my $job_short = substr( $job, 0, 16 );
 
-      if( @tokens > 0 && ( $tokens[$jobID_Pos] =~ m/$job_short/ ) )
+	  # alebac: adapted the following lines to work at DCCN; stekai: works for DCC as well
+	  # if not empty & job from list & still running
+      if( @tokens > 0 && ( $tokens[$jobID_Pos] eq $job_short ) && ( $tokens[$statePos] ne "C" ) )
         {
-	# Check status - there's no error state in PBS
-        # so we simply skip over this check
-#        if( $tokens[$statePos] =~ m/E/ )
-#         {
-#         $haveErrors = 1;
-#         }
-#       else
-#         {
+
           $jobsIncomplete = $jobsIncomplete + 1;
-#	  }
+
         if( $verbose )
           {
 	  print "    Job $job is in state $tokens[$statePos]\n";
 	  }
 	}
-      last qstatLine if ( @tokens > 0 && ( $tokens[$jobID_Pos] =~ m/$job_short/ ) );
+      last qstatLine if ( @tokens > 0 && ( $tokens[$jobID_Pos] eq $job_short ) );
       }
     }
 
