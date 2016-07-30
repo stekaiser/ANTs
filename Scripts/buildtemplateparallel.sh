@@ -980,8 +980,8 @@ if [ "$RIGID" -eq 1 ] ;
 		jobIDs="$jobIDs $id"
 		    sleep 0.5
       elif [ $DOQSUB -eq 4 ]; then
-        echo "cp -R /jobtmp/pbstmp.\$PBS_JOBID/* ${currentdir}" >> $qscript;
-		id=`qsub -N antsrigid -v ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1,LD_LIBRARY_PATH=$LD_LIBRARY_PATH,ANTSPATH=$ANTSPATH $QSUBOPTS -q $DEFQUEUE -l nodes=1:ppn=1 -l walltime=4:00:00 $qscript | awk '{print $1}'`
+        #echo "cp -R /jobtmp/pbstmp.\$PBS_JOBID/* ${currentdir}" >> $qscript;
+		id=`qsub -N antsrigid -v ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1,LD_LIBRARY_PATH=$LD_LIBRARY_PATH,ANTSPATH=$ANTSPATH $QSUBOPTS -q $DEFQUEUE -l nodes=1:ppn=1 -l walltime=4:00:00 -l mem=4gb $qscript | awk '{print $1}'`
 		jobIDs="$jobIDs $id"
         sleep 0.5
       elif  [ $DOQSUB -eq 2 ] ; then
@@ -1211,8 +1211,8 @@ while [  $i -lt ${ITERATIONLIMIT} ]
       qscript="job_${count}_${i}.sh"
       echo "$SCRIPTPREPEND" > $qscript
       echo "$exe" >> $qscript
-      echo "cp -R /jobtmp/pbstmp.\$PBS_JOBID/* ${currentdir}" >> $qscript;
-      id=`qsub -N antsdef${i} -v ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1,LD_LIBRARY_PATH=$LD_LIBRARY_PATH,ANTSPATH=$ANTSPATH -q $DEFQUEUE -l nodes=1:ppn=1 -l walltime=4:00:00 $QSUBOPTS $qscript | awk '{print $1}'`
+      #echo "cp -R /jobtmp/pbstmp.\$PBS_JOBID/* ${currentdir}" >> $qscript;
+      id=`qsub -N antsdef${i} -v ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1,LD_LIBRARY_PATH=$LD_LIBRARY_PATH,ANTSPATH=$ANTSPATH -q $DEFQUEUE -l nodes=1:ppn=1 -l walltime=4:00:00 -l mem=4gb $QSUBOPTS $qscript | awk '{print $1}'`
       jobIDs="$jobIDs $id"
       sleep 0.5
     elif [ $DOQSUB -eq 2 ] ; then
