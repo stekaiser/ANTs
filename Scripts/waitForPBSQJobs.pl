@@ -34,6 +34,13 @@ my $user = `whoami`;
 
 my $qstatOutput = `qstat -u $user`;
 
+$user = trim($user);
+my $pattern = '^(.*)(?='.$user.')';
+my ($jobNamePattern) = $qstatOutput =~ qr/$pattern/m;
+$jobNamePattern =~ s/^\s+|\s+|^\t+|\t+$//g ;
+my $nJobNameCharacters = length($jobNamePattern);
+
+
 if ( !scalar(@jobIDs) || !$qstatOutput ) {
 
     # Nothing to do
@@ -94,7 +101,7 @@ while ($jobsIncomplete) {
             # alebac: for DCCN its 22 chars
             # stekai: for DCC its 16 chars
 
-            my $job_short = substr( $job, 0, 16 );
+            my $job_short = substr( $job, 0, $nJobNameCharacters );
 
             # alebac: adapted the following lines to work at DCCN; stekai: works for DCC as well
             # if not empty & job from list & still running
